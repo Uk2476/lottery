@@ -64,4 +64,7 @@ contract Raffle {
         lotteryRestart();
     }
 
+    function lotteryRestart() internal {
+        participantsAddresses = new address payable [](0);
+    }
 }
