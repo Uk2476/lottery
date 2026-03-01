@@ -9,7 +9,7 @@ contract Raffle {
     bytes32 keyhash;
     bytes extraArgs; 
     uint256 subId;
-    uint16 requestConfirmations;
+    uint16 public constant requestConfirmations = 5;
     uint32 callbackGasLimit;
     uint32 numWords ;
     uint256  public enteranceFee;
