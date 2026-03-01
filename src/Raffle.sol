@@ -15,18 +15,24 @@ contract Raffle {
     uint256  public enteranceFee;
     uint256 public drawInterval ;
     uint256 lastDrawTimeStamp;
+    VRFV2PlusClient requestId;
 
 
     address[] private payable participantsAddresses;
+    address public payable raffleWinner ;
 
-    constructor (uint256 _fee , uint256 _interval , bytes32 Keyhash , uint256 subsciption , uint32 CallBackGAsLimit) {
+    constructor (uint256 _fee , uint256 _interval , bytes32 Keyhash , uint256 subsciption , uint32 CallBackGasLimit , address vrfCoordinatorV2 ) VRFConsumerBaseV2Plus(vrfCoordinatorV2) {
         enteranceFee = _fee;
         drawInterval = _interval;
+        keyhash = Keyhash ;
+        subId = subscription;
+        callbackGasLimit = CallBackGasLimit ;
+
     }
 
     function enterRaffle () public payable {
         require(msg.value > _fee , insufficientEnterenceFee());
-        participantsAddress.push(msg.sender);
+        participantsAddress.push(payable(msg.sender));
     }
 
     function pickWinner() external {
@@ -41,10 +47,21 @@ contract Raffle {
             requestConfirmations: requestConfirmations,
             callbackGasLimit: callbackGasLimit,
             numWords: numWords,
-            extraArgs: VRFV2PlusClient._argsToBytes(VRFV2PlusClient.ExtraArgsV1({nativePayment: false}))
+            extraArgs: VRFV2PlusClient._argsToBytes(VRFV2PlusClient.ExtraArgsV1({nativePayment: false}))})
             
         requestId = s_vrfCoordinator.requestRandomWords(request);
 
         lastDrawTimeStamp = block.timestamp;
     }
+
+    function fulfillRandomWords(uint256 requestid, uint256[] memory randomWords) internal override{
+        uint256 memory noOfAccount = participantsAddress.length ;
+        uint256 memory indexSelected = randomWords[0]%noOfAccount ;
+        raffleWinner = participantsAddresses[indexSelected];
+        (bool success,)= raffleWinner.call{value: address(this).balance}("");
+        require(success , transactionFailed());
+
+        lotteryRestart();
+    }
+
 }
