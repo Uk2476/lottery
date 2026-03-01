@@ -6,6 +6,7 @@ contract Raffle {
     uint256  public enteranceFee;
     uint256 public drawInterval ;
 
+
     constructor (uint256 _fee , uint256 _interval) {
         enteranceFee = _fee;
         drawInterval = _interval;
@@ -15,5 +16,12 @@ contract Raffle {
         require(msg.value > _fee , insufficientEnterenceFee())
     }
 
-    function pickWinner() 
+    function pickWinner() public {
+        if (block.timestamp - lastDrawTimestamp < drawInterval){
+            revert intervalNotFinished();
+        }
+
+
+        lastDrawTimeStamp = block.timestamp;
+    }
 }
