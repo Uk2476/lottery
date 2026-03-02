@@ -23,7 +23,9 @@ contract HelperConfig is Script {
         networkconfigs[SEPOLIA_CHAIN_ID]= getSepoliaConfig();
     }
 
-    
+    function getCONFIG(uint256 chainId) public view returns(NetworkConfig memory){
+        return networkconfigs[chainId];
+    }    
 
     function getSepoliaConfig() public pure returns(NetworkConfig memory) {
         return NetworkConfig({
