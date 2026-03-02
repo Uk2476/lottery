@@ -35,6 +35,14 @@ contract Raffle {
         participantsAddress.push(payable(msg.sender));
     }
 
+    function checkUpkeep(bytes memory) public returns ( bool Upkeep , bytes memory ){
+        bool interval = block.timestamp - lastDrawTimeStamp > drawInterval ; 
+        bool players = participantsAddress.length > 0 ;
+        bool balance = address(this).balance > 0 ;
+        Upkeep = interval && players && balance ;
+        return upkeep ;
+    }
+
     function performUpkeep() external {
         if (block.timestamp - lastDrawTimestamp < drawInterval){
             revert intervalNotFinished();
