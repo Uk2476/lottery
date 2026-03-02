@@ -35,7 +35,7 @@ contract Raffle {
         participantsAddress.push(payable(msg.sender));
     }
 
-    function pickWinner() external {
+    function performUpkeep() external {
         if (block.timestamp - lastDrawTimestamp < drawInterval){
             revert intervalNotFinished();
         }
@@ -47,7 +47,7 @@ contract Raffle {
             requestConfirmations: requestConfirmations,
             callbackGasLimit: callbackGasLimit,
             numWords: numWords,
-            extraArgs: VRFV2PlusClient._argsToBytes(VRFV2PlusClient.ExtraArgsV1({nativePayment: false}))})
+            extraArgs: VRFV2PlusClient._argsToBytes(VRFV2PlusClient.ExtraArgsV1({nativePayment: false});)})
             
         requestId = s_vrfCoordinator.requestRandomWords(request);
 
