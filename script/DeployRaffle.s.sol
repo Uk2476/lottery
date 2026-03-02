@@ -8,7 +8,7 @@ import {Raffle} from "../src/Raffle.sol";
 contract DeployRaffle is Script {
     function run() external returns (Raffle){
         HelperConfig helperConfig = new HelperConfig();
-        HelperConfig.NetworkConfig memory config = helperConfig.getCONFIG();
+        HelperConfig.NetworkConfig memory config = helperConfig.getCONFIG(11155111);
 
         Raffle raffle;
         vm.startBroadcast();
