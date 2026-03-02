@@ -19,6 +19,12 @@ contract HelperConfig is Script {
     NetworkConfig public networkconfig ;
     mapping ( uint256 => NetworkConfig ) public networkconfigs;
 
+    constructor () {
+        networkconfigs[SEPOLIA_CHAIN_ID]= getSepoliaConfig();
+    }
+
+    
+
     function getSepoliaConfig() public pure returns(NetworkConfig memory) {
         return NetworkConfig({
             EnteranceFees: 0.01 ether,
